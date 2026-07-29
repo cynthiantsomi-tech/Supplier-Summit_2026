@@ -322,5 +322,190 @@ document.addEventListener("DOMContentLoaded", () => {
         );
 
     }
+    /*==================================
+EVENT COUNTDOWN
+==================================*/
+
+const countdownDays =
+    document.getElementById("countdownDays");
+
+const countdownHours =
+    document.getElementById("countdownHours");
+
+const countdownMinutes =
+    document.getElementById("countdownMinutes");
+
+const countdownSeconds =
+    document.getElementById("countdownSeconds");
+
+const countdownMessage =
+    document.getElementById("countdownMessage");
+
+/*
+Event date:
+10 September 2026
+08:00 AM
+South African time
+*/
+
+const eventDate = new Date(
+    "2026-09-10T08:00:00+02:00"
+);
+
+let countdownInterval = null;
+
+
+/*==================================
+FLIP ANIMATION
+==================================*/
+
+function animateFlip(
+    element,
+    newValue
+) {
+
+    if (!element) {
+        return;
+    }
+
+    if (
+        element.textContent.trim() ===
+        newValue
+    ) {
+        return;
+    }
+
+    element.classList.remove("flip");
+
+    /*
+    Restart the animation even if it
+    has just finished.
+    */
+
+    void element.offsetWidth;
+
+    element.classList.add("flip");
+
+    window.setTimeout(() => {
+
+        element.textContent = newValue;
+
+    }, 190);
+
+    window.setTimeout(() => {
+
+        element.classList.remove("flip");
+
+    }, 430);
+
+}
+
+
+/*==================================
+UPDATE COUNTDOWN
+==================================*/
+
+function updateCountdown() {
+
+    if (
+        !countdownDays ||
+        !countdownHours ||
+        !countdownMinutes ||
+        !countdownSeconds
+    ) {
+        return;
+    }
+
+    const now = new Date();
+
+    const distance =
+        eventDate.getTime() -
+        now.getTime();
+
+    if (distance <= 0) {
+
+        countdownDays.textContent = "00";
+        countdownHours.textContent = "00";
+        countdownMinutes.textContent = "00";
+        countdownSeconds.textContent = "00";
+
+        if (countdownMessage) {
+
+            countdownMessage.textContent =
+                "The Supplier Summit is here.";
+
+        }
+
+        if (countdownInterval) {
+
+            window.clearInterval(
+                countdownInterval
+            );
+
+        }
+
+        return;
+    }
+
+    const days = Math.floor(
+        distance /
+        (1000 * 60 * 60 * 24)
+    );
+
+    const hours = Math.floor(
+        (
+            distance /
+            (1000 * 60 * 60)
+        ) % 24
+    );
+
+    const minutes = Math.floor(
+        (
+            distance /
+            (1000 * 60)
+        ) % 60
+    );
+
+    const seconds = Math.floor(
+        (
+            distance /
+            1000
+        ) % 60
+    );
+
+    animateFlip(
+        countdownDays,
+        String(days).padStart(2, "0")
+    );
+
+    animateFlip(
+        countdownHours,
+        String(hours).padStart(2, "0")
+    );
+
+    animateFlip(
+        countdownMinutes,
+        String(minutes).padStart(2, "0")
+    );
+
+    animateFlip(
+        countdownSeconds,
+        String(seconds).padStart(2, "0")
+    );
+
+}
+
+
+/*==================================
+START COUNTDOWN
+==================================*/
+
+updateCountdown();
+
+countdownInterval =
+    window.setInterval(
+        updateCountdown,
+        1000
+    );
 
 });
